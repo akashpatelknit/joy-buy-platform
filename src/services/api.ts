@@ -2,13 +2,25 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: 'http://localhost:8080/api',
+  timeout: 10000,
   headers: { 'Content-Type': 'application/json' },
 });
+
+// Response interceptor for global error handling
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.warn('API Error:', error.message);
+    return Promise.reject(error);
+  }
+);
 
 export interface Category {
   id: number;
   name: string;
   description?: string;
+  slug?: string;
+  productCount?: number;
 }
 
 export interface Product {
@@ -19,6 +31,18 @@ export interface Product {
   imageUrl: string;
   category?: Category;
   categoryId?: number;
+  stock?: number;
+  rating?: number;
+  reviewCount?: number;
+}
+
+export interface Review {
+  id: number;
+  productId: number;
+  reviewer: string;
+  rating: number;
+  comment: string;
+  date: string;
 }
 
 // Category API
