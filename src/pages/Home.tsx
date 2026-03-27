@@ -7,6 +7,7 @@ import { ProductCard } from '@/components/ProductCard';
 import { useProductStore } from '@/stores/useProductStore';
 import { Skeleton } from '@/components/ui/skeleton';
 import { motion } from 'framer-motion';
+import heroImage from '@/assets/hero-luxury.jpg';
 
 const ITEMS_PER_PAGE = 12;
 
