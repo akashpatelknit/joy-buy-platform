@@ -9,18 +9,20 @@ interface ThemeState {
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
-      dark: false,
+      dark: true, // Dark mode is default for luxury theme
       toggle: () =>
         set((s) => {
           const next = !s.dark;
-          document.documentElement.classList.toggle('dark', next);
+          document.documentElement.classList.toggle('light', !next);
           return { dark: next };
         }),
     }),
     {
       name: 'theme-storage',
       onRehydrateStorage: () => (state) => {
-        if (state?.dark) document.documentElement.classList.add('dark');
+        if (state && !state.dark) {
+          document.documentElement.classList.add('light');
+        }
       },
     }
   )
