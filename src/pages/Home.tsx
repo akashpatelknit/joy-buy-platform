@@ -70,31 +70,53 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative overflow-hidden border-b border-border/50">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-card to-accent/20" />
-        <div className="relative container mx-auto px-4 py-20 md:py-32">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <p className="text-xs font-medium uppercase tracking-[0.3em] text-primary mb-4">
-              New Collection 2026
-            </p>
-            <h1 className="font-display text-4xl font-bold tracking-tight text-foreground md:text-6xl lg:text-7xl">
-              Crafted for the<br />
-              <span className="text-gradient-gold">Exceptional</span>
-            </h1>
-            <p className="mt-5 max-w-lg text-base text-muted-foreground leading-relaxed">
-              Discover our curated collection of the world's finest luxury goods. Each piece handpicked for those who appreciate the art of fine living.
-            </p>
-            <div className="mt-8 flex gap-3">
-              <Button size="lg" className="gap-2 px-8">
-                Shop Collection
-              </Button>
-              <Button size="lg" variant="outline" className="gap-2 border-primary/30 text-primary hover:bg-primary/10">
-                View Lookbook
-              </Button>
-            </div>
-          </motion.div>
+        <div className="relative container mx-auto px-4 py-16 md:py-24">
+          <div className="grid items-center gap-8 md:grid-cols-2 lg:gap-12">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <p className="text-xs font-medium uppercase tracking-[0.3em] text-primary mb-4">
+                New Collection 2026
+              </p>
+              <h1 className="font-display text-4xl font-bold tracking-tight text-foreground md:text-5xl lg:text-6xl">
+                Crafted for the<br />
+                <span className="text-gradient-gold">Exceptional</span>
+              </h1>
+              <p className="mt-5 max-w-lg text-base text-muted-foreground leading-relaxed">
+                Discover our curated collection of the world's finest luxury goods. Each piece handpicked for those who appreciate the art of fine living.
+              </p>
+              <div className="mt-8 flex gap-3">
+                <Button size="lg" className="gap-2 px-8">
+                  Shop Collection
+                </Button>
+                <Button size="lg" variant="outline" className="gap-2 border-primary/30 text-primary hover:bg-primary/10">
+                  View Lookbook
+                </Button>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative"
+            >
+              <div className="overflow-hidden rounded-2xl border border-border/30 shadow-[0_0_60px_rgba(201,168,76,0.1)]">
+                <img
+                  src={heroImage}
+                  alt="Luxury gold watch and jewelry on dark velvet"
+                  width={1920}
+                  height={1080}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div className="absolute -bottom-3 -right-3 h-24 w-24 rounded-full border border-primary/20 bg-accent/50 backdrop-blur-sm flex items-center justify-center">
+                <span className="font-display text-xs font-semibold text-primary text-center leading-tight">New<br/>Season</span>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
