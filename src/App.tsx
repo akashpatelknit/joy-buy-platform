@@ -7,6 +7,7 @@ import { AnimatePresence } from "framer-motion";
 import { UserLayout } from "@/components/UserLayout";
 import { AdminLayout } from "@/components/AdminLayout";
 import { AdminGuard } from "@/components/AdminGuard";
+import { AuthGuard } from "@/components/AuthGuard";
 
 import Home from "@/pages/Home";
 import ProductDetails from "@/pages/ProductDetails";
@@ -14,6 +15,8 @@ import Cart from "@/pages/Cart";
 import Wishlist from "@/pages/Wishlist";
 import Checkout from "@/pages/Checkout";
 import OrderTracking from "@/pages/OrderTracking";
+import AllCategories from "@/pages/AllCategories";
+import AllProducts from "@/pages/AllProducts";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
@@ -39,9 +42,13 @@ const App = () => (
               <Route path="/" element={<Home />} />
               <Route path="/product/:id" element={<ProductDetails />} />
               <Route path="/cart" element={<Cart />} />
-              <Route path="/wishlist" element={<Wishlist />} />
+              <Route path="/categories" element={<AllCategories />} />
+              <Route path="/products" element={<AllProducts />} />
               <Route path="/checkout" element={<Checkout />} />
-              <Route path="/orders/track" element={<OrderTracking />} />
+
+              {/* Protected user routes */}
+              <Route path="/wishlist" element={<AuthGuard><Wishlist /></AuthGuard>} />
+              <Route path="/orders/track" element={<AuthGuard><OrderTracking /></AuthGuard>} />
             </Route>
 
             {/* Admin routes - protected */}
