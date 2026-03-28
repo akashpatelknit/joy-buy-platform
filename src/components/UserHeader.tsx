@@ -1,16 +1,21 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Heart, Sun, Moon, Menu, X, Search, Package } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { ShoppingCart, Heart, Sun, Moon, Menu, X, Search, LogIn, LogOut, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useCartStore } from '@/stores/useCartStore';
 import { useWishlistStore } from '@/stores/useWishlistStore';
 import { useThemeStore } from '@/stores/useThemeStore';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { useToast } from '@/hooks/use-toast';
 
 export function UserHeader() {
   const totalItems = useCartStore((s) => s.totalItems());
   const wishlistCount = useWishlistStore((s) => s.items.length);
   const { dark, toggle } = useThemeStore();
+  const { isAuthenticated, user, logout, isAdmin } = useAuthStore();
+  const { toast } = useToast();
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const location = useLocation();
@@ -19,8 +24,14 @@ export function UserHeader() {
     { to: '/', label: 'Home' },
     { to: '/wishlist', label: 'Wishlist' },
     { to: '/orders/track', label: 'Track Order' },
-    { to: '/admin', label: 'Admin' },
+    ...(isAuthenticated && isAdmin() ? [{ to: '/admin', label: 'Admin' }] : []),
   ];
+
+  const handleLogout = () => {
+    logout();
+    toast({ title: 'Logged out successfully' });
+    navigate('/');
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/50 bg-background/90 backdrop-blur-xl">
@@ -75,6 +86,25 @@ export function UserHeader() {
               )}
             </Button>
           </Link>
+
+          {isAuthenticated ? (
+            <div className="hidden lg:flex items-center gap-1">
+              <span className="text-xs text-muted-foreground px-2">
+                <User className="h-3.5 w-3.5 inline mr-1" />
+                {user?.firstName}
+              </span>
+              <Button variant="ghost" size="icon" onClick={handleLogout} className="text-muted-foreground hover:text-foreground">
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </div>
+          ) : (
+            <Link to="/login" className="hidden lg:block">
+              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground gap-1.5">
+                <LogIn className="h-4 w-4" /> Login
+              </Button>
+            </Link>
+          )}
+
           <Button
             variant="ghost"
             size="icon"
@@ -118,6 +148,22 @@ export function UserHeader() {
                 {link.label}
               </Link>
             ))}
+            {isAuthenticated ? (
+              <button
+                onClick={() => { handleLogout(); setMenuOpen(false); }}
+                className="rounded-lg px-4 py-3 text-sm font-medium text-muted-foreground hover:bg-secondary text-left flex items-center gap-2"
+              >
+                <LogOut className="h-4 w-4" /> Logout ({user?.firstName})
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                onClick={() => setMenuOpen(false)}
+                className="rounded-lg px-4 py-3 text-sm font-medium text-muted-foreground hover:bg-secondary flex items-center gap-2"
+              >
+                <LogIn className="h-4 w-4" /> Login / Sign Up
+              </Link>
+            )}
           </nav>
         </div>
       )}

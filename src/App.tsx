@@ -6,6 +6,7 @@ import { AnimatePresence } from "framer-motion";
 
 import { UserLayout } from "@/components/UserLayout";
 import { AdminLayout } from "@/components/AdminLayout";
+import { AdminGuard } from "@/components/AdminGuard";
 
 import Home from "@/pages/Home";
 import ProductDetails from "@/pages/ProductDetails";
@@ -13,6 +14,8 @@ import Cart from "@/pages/Cart";
 import Wishlist from "@/pages/Wishlist";
 import Checkout from "@/pages/Checkout";
 import OrderTracking from "@/pages/OrderTracking";
+import Login from "@/pages/Login";
+import Signup from "@/pages/Signup";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import AdminCategories from "@/pages/admin/AdminCategories";
 import AdminProducts from "@/pages/admin/AdminProducts";
@@ -27,6 +30,10 @@ const App = () => (
       <BrowserRouter>
         <AnimatePresence mode="wait">
           <Routes>
+            {/* Auth routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+
             {/* User routes */}
             <Route element={<UserLayout />}>
               <Route path="/" element={<Home />} />
@@ -37,8 +44,8 @@ const App = () => (
               <Route path="/orders/track" element={<OrderTracking />} />
             </Route>
 
-            {/* Admin routes */}
-            <Route path="/admin" element={<AdminLayout />}>
+            {/* Admin routes - protected */}
+            <Route path="/admin" element={<AdminGuard><AdminLayout /></AdminGuard>}>
               <Route index element={<AdminDashboard />} />
               <Route path="products" element={<AdminProducts />} />
               <Route path="categories" element={<AdminCategories />} />
