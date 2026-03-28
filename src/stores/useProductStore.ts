@@ -327,9 +327,8 @@ export const useProductStore = create<ProductStore>((set, get) => ({
   fetchProducts: async () => {
     set({ loading: true, error: null });
     try {
-      const products = await productApi.getAll();
-      console.log("products", products);
-      set({ products: products?.data, loading: false });
+      const data = await productApi.getAll();
+      set({ products: data, loading: false });
     } catch {
       set({ products: mockProducts, loading: false });
     }
