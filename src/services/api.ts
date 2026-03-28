@@ -74,6 +74,14 @@ export interface ProductImage {
   productId: string;
 }
 
+// Auth API
+export const authApi = {
+  login: (data: { email: string; password: string }) =>
+    api.post('/auth/login', data).then((r) => r.data),
+  signup: (data: { firstName: string; lastName: string; phoneNumber: string; email: string; password: string }) =>
+    api.post('/auth/signup', data).then((r) => r.data),
+};
+
 // Category API
 export const categoryApi = {
   getAll: () => api.get<Category[]>("/categories").then((r) => r.data),

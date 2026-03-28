@@ -193,7 +193,7 @@ export default function AdminProducts() {
     }
   };
 
-  const confirmDelete = (id: string) => {
+  const confirmDelete = (id: number) => {
     setDeleteId(id);
     setConfirmOpen(true);
   };
