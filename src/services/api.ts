@@ -16,13 +16,14 @@ api.interceptors.response.use(
 );
 
 export interface Category {
-  id: string;
+  id: number;
   name: string;
   description?: string;
   imageUrl?: string;
-  isActive: boolean;
+  isActive?: boolean;
   parentId?: string | null;
   slug: string;
+  productCount?: number;
 }
 
 export interface ProductImages {
@@ -34,17 +35,22 @@ export interface ProductImages {
 }
 
 export interface Product {
-  id: string;
+  id: number;
   name: string;
   description?: string;
   price: number;
   discountPrice?: number;
-  sku: string;
-  status: "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK";
-  stockQuantity: number;
-  categoryName: string;
-  categoryId: string;
-  images: ProductImages[];
+  sku?: string;
+  status?: "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK";
+  stockQuantity?: number;
+  categoryName?: string;
+  categoryId: number;
+  category?: Category;
+  images?: ProductImages[];
+  imageUrl?: string;
+  stock?: number;
+  rating?: number;
+  reviewCount?: number;
 }
 
 export interface Review {
@@ -67,6 +73,14 @@ export interface ProductImage {
   isPrimary: boolean;
   productId: string;
 }
+
+// Auth API
+export const authApi = {
+  login: (data: { email: string; password: string }) =>
+    api.post('/auth/login', data).then((r) => r.data),
+  signup: (data: { firstName: string; lastName: string; phoneNumber: string; email: string; password: string }) =>
+    api.post('/auth/signup', data).then((r) => r.data),
+};
 
 // Category API
 export const categoryApi = {

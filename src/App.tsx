@@ -6,6 +6,8 @@ import { AnimatePresence } from "framer-motion";
 
 import { UserLayout } from "@/components/UserLayout";
 import { AdminLayout } from "@/components/AdminLayout";
+import { AdminGuard } from "@/components/AdminGuard";
+import { AuthGuard } from "@/components/AuthGuard";
 
 import Home from "@/pages/Home";
 import ProductDetails from "@/pages/ProductDetails";
@@ -13,6 +15,10 @@ import Cart from "@/pages/Cart";
 import Wishlist from "@/pages/Wishlist";
 import Checkout from "@/pages/Checkout";
 import OrderTracking from "@/pages/OrderTracking";
+import AllCategories from "@/pages/AllCategories";
+import AllProducts from "@/pages/AllProducts";
+import Login from "@/pages/Login";
+import Signup from "@/pages/Signup";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import AdminCategories from "@/pages/admin/AdminCategories";
 import AdminProducts from "@/pages/admin/AdminProducts";
@@ -27,18 +33,26 @@ const App = () => (
       <BrowserRouter>
         <AnimatePresence mode="wait">
           <Routes>
+            {/* Auth routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+
             {/* User routes */}
             <Route element={<UserLayout />}>
               <Route path="/" element={<Home />} />
               <Route path="/product/:id" element={<ProductDetails />} />
               <Route path="/cart" element={<Cart />} />
-              <Route path="/wishlist" element={<Wishlist />} />
+              <Route path="/categories" element={<AllCategories />} />
+              <Route path="/products" element={<AllProducts />} />
               <Route path="/checkout" element={<Checkout />} />
-              <Route path="/orders/track" element={<OrderTracking />} />
+
+              {/* Protected user routes */}
+              <Route path="/wishlist" element={<AuthGuard><Wishlist /></AuthGuard>} />
+              <Route path="/orders/track" element={<AuthGuard><OrderTracking /></AuthGuard>} />
             </Route>
 
-            {/* Admin routes */}
-            <Route path="/admin" element={<AdminLayout />}>
+            {/* Admin routes - protected */}
+            <Route path="/admin" element={<AdminGuard><AdminLayout /></AdminGuard>}>
               <Route index element={<AdminDashboard />} />
               <Route path="products" element={<AdminProducts />} />
               <Route path="categories" element={<AdminCategories />} />
