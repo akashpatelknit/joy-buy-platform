@@ -16,13 +16,14 @@ api.interceptors.response.use(
 );
 
 export interface Category {
-  id: string;
+  id: number;
   name: string;
   description?: string;
   imageUrl?: string;
-  isActive: boolean;
+  isActive?: boolean;
   parentId?: string | null;
   slug: string;
+  productCount?: number;
 }
 
 export interface ProductImages {
