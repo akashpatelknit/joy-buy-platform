@@ -335,10 +335,8 @@ export const useProductStore = create<ProductStore>((set, get) => ({
   },
   fetchCategories: async () => {
     try {
-      const categories = await categoryApi.getAll();
-
-      console.log("categories", categories?.data);
-      set({ categories: categories?.data });
+      const data = await categoryApi.getAll();
+      set({ categories: data });
     } catch {
       set({ categories: mockCategories });
     }
