@@ -148,7 +148,7 @@ export default function AdminProducts() {
       sortOrder: imgSortOrder ? parseInt(imgSortOrder) : undefined,
     };
     try {
-      await productImageApi.addImage(imageTargetProduct.id, data as any);
+      await productImageApi.addImage(String(imageTargetProduct.id), data as any);
       toast({ title: "Image added successfully" });
       fetchProducts();
       setImageOpen(false);
