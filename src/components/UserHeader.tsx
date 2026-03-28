@@ -22,6 +22,8 @@ export function UserHeader() {
 
   const navLinks = [
     { to: '/', label: 'Home' },
+    { to: '/products', label: 'Products' },
+    { to: '/categories', label: 'Categories' },
     { to: '/wishlist', label: 'Wishlist' },
     { to: '/orders/track', label: 'Track Order' },
     ...(isAuthenticated && isAdmin() ? [{ to: '/admin', label: 'Admin' }] : []),
