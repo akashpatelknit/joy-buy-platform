@@ -1,20 +1,22 @@
-import { useEffect, useState, useMemo, useCallback } from 'react';
-import { Search, SlidersHorizontal, Star, X } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Slider } from '@/components/ui/slider';
-import { ProductCard } from '@/components/ProductCard';
-import { useProductStore } from '@/stores/useProductStore';
-import { Skeleton } from '@/components/ui/skeleton';
-import { motion } from 'framer-motion';
-import heroImage from '@/assets/hero-luxury.jpg';
+import { useEffect, useState, useMemo, useCallback } from "react";
+import { Search, SlidersHorizontal, Star, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import { ProductCard } from "@/components/ProductCard";
+import { useProductStore } from "@/stores/useProductStore";
+import { Skeleton } from "@/components/ui/skeleton";
+import { motion } from "framer-motion";
+import heroImage from "@/assets/hero-luxury.jpg";
+import { Product } from "@/services/api";
 
 const ITEMS_PER_PAGE = 12;
 
 export default function Home() {
-  const { products, categories, loading, fetchProducts, fetchCategories } = useProductStore();
+  const { products, categories, loading, fetchProducts, fetchCategories } =
+    useProductStore();
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
   const [minRating, setMinRating] = useState(0);
@@ -25,45 +27,66 @@ export default function Home() {
     fetchCategories();
   }, [fetchProducts, fetchCategories]);
 
-  const maxPrice = useMemo(() => Math.max(...products.map(p => p.price), 10000), [products]);
+  const maxPrice = useMemo(
+    () => Math.max(...products.map((p) => p.price), 10000),
+    [products],
+  );
+
+  useEffect(() => {
+    setPriceRange([0, maxPrice]);
+  }, [maxPrice]);
 
   const toggleCategory = useCallback((id: number) => {
-    setSelectedCategories(prev =>
-      prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
+    setSelectedCategories((prev) =>
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id],
     );
   }, []);
 
   const filtered = useMemo(() => {
     let result = products;
     if (selectedCategories.length > 0) {
-      result = result.filter(p => selectedCategories.includes(p.categoryId || p.category?.id || 0));
+      result = result.filter((p) => selectedCategories.includes(p.categoryId));
     }
     if (search) {
       const q = search.toLowerCase();
-      result = result.filter(p =>
-        p.name.toLowerCase().includes(q) || p.category?.name.toLowerCase().includes(q)
+      result = result.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.categoryName.toLowerCase().includes(q),
       );
     }
-    result = result.filter(p => p.price >= priceRange[0] && p.price <= priceRange[1]);
+    result = result.filter(
+      (p) => p.price >= priceRange[0] && p.price <= priceRange[1],
+    );
     if (minRating > 0) {
-      result = result.filter(p => (p.rating || 0) >= minRating);
+      result = result.filter((p) => (p.rating || 0) >= minRating);
     }
     return result;
   }, [products, selectedCategories, search, priceRange, minRating]);
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const paginated = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+  const paginated = filtered.slice(
+    (page - 1) * ITEMS_PER_PAGE,
+    page * ITEMS_PER_PAGE,
+  );
 
-  useEffect(() => { setPage(1); }, [selectedCategories, search, priceRange, minRating]);
+  useEffect(() => {
+    setPage(1);
+  }, [selectedCategories, search, priceRange, minRating]);
 
   const clearFilters = () => {
     setSelectedCategories([]);
-    setSearch('');
+    setSearch("");
     setPriceRange([0, maxPrice]);
     setMinRating(0);
   };
 
-  const hasActiveFilters = selectedCategories.length > 0 || search || minRating > 0 || priceRange[0] > 0 || priceRange[1] < maxPrice;
+  const hasActiveFilters =
+    selectedCategories.length > 0 ||
+    search ||
+    minRating > 0 ||
+    priceRange[0] > 0 ||
+    priceRange[1] < maxPrice;
 
   return (
     <div>
@@ -81,17 +104,24 @@ export default function Home() {
                 New Collection 2026
               </p>
               <h1 className="font-display text-4xl font-bold tracking-tight text-foreground md:text-5xl lg:text-6xl">
-                Crafted for the<br />
+                Crafted for the
+                <br />
                 <span className="text-gradient-gold">Exceptional</span>
               </h1>
               <p className="mt-5 max-w-lg text-base text-muted-foreground leading-relaxed">
-                Discover our curated collection of the world's finest luxury goods. Each piece handpicked for those who appreciate the art of fine living.
+                Discover our curated collection of the world's finest luxury
+                goods. Each piece handpicked for those who appreciate the art of
+                fine living.
               </p>
               <div className="mt-8 flex gap-3">
                 <Button size="lg" className="gap-2 px-8">
                   Shop Collection
                 </Button>
-                <Button size="lg" variant="outline" className="gap-2 border-primary/30 text-primary hover:bg-primary/10">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="gap-2 border-primary/30 text-primary hover:bg-primary/10"
+                >
                   View Lookbook
                 </Button>
               </div>
@@ -113,7 +143,11 @@ export default function Home() {
                 />
               </div>
               <div className="absolute -bottom-3 -right-3 h-24 w-24 rounded-full border border-primary/20 bg-accent/50 backdrop-blur-sm flex items-center justify-center">
-                <span className="font-display text-xs font-semibold text-primary text-center leading-tight">New<br/>Season</span>
+                <span className="font-display text-xs font-semibold text-primary text-center leading-tight">
+                  New
+                  <br />
+                  Season
+                </span>
               </div>
             </motion.div>
           </div>
@@ -125,7 +159,7 @@ export default function Home() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide pb-1">
             <Button
-              variant={selectedCategories.length === 0 ? 'default' : 'outline'}
+              variant={selectedCategories.length === 0 ? "default" : "outline"}
               size="sm"
               className="shrink-0 rounded-full text-xs"
               onClick={() => setSelectedCategories([])}
@@ -135,7 +169,9 @@ export default function Home() {
             {categories.map((c) => (
               <Button
                 key={c.id}
-                variant={selectedCategories.includes(c.id) ? 'default' : 'outline'}
+                variant={
+                  selectedCategories.includes(c.id) ? "default" : "outline"
+                }
                 size="sm"
                 className="shrink-0 rounded-full text-xs border-border/50"
                 onClick={() => toggleCategory(c.id)}
@@ -188,19 +224,31 @@ export default function Home() {
                   {[0, 3, 4, 4.5].map((r) => (
                     <Button
                       key={r}
-                      variant={minRating === r ? 'default' : 'outline'}
+                      variant={minRating === r ? "default" : "outline"}
                       size="sm"
                       className="text-xs gap-1 border-border/50"
                       onClick={() => setMinRating(r)}
                     >
-                      {r === 0 ? 'All' : <><Star className="h-3 w-3 fill-current" />{r}+</>}
+                      {r === 0 ? (
+                        "All"
+                      ) : (
+                        <>
+                          <Star className="h-3 w-3 fill-current" />
+                          {r}+
+                        </>
+                      )}
                     </Button>
                   ))}
                 </div>
               </div>
 
               {hasActiveFilters && (
-                <Button variant="ghost" size="sm" onClick={clearFilters} className="text-xs text-muted-foreground gap-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearFilters}
+                  className="text-xs text-muted-foreground gap-1"
+                >
                   <X className="h-3 w-3" /> Clear filters
                 </Button>
               )}
@@ -209,8 +257,15 @@ export default function Home() {
 
           {/* Mobile filter toggle */}
           <div className="flex items-center justify-between lg:hidden">
-            <p className="text-sm text-muted-foreground">{filtered.length} products</p>
-            <Button variant="outline" size="sm" className="gap-2 border-border/50" onClick={() => setFiltersOpen(!filtersOpen)}>
+            <p className="text-sm text-muted-foreground">
+              {filtered.length} products
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2 border-border/50"
+              onClick={() => setFiltersOpen(!filtersOpen)}
+            >
               <SlidersHorizontal className="h-3.5 w-3.5" /> Filters
             </Button>
           </div>
@@ -225,7 +280,9 @@ export default function Home() {
                 className="bg-secondary border-border/50"
               />
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">Price</p>
+                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">
+                  Price
+                </p>
                 <Slider
                   min={0}
                   max={maxPrice}
@@ -234,11 +291,19 @@ export default function Home() {
                   onValueChange={(v) => setPriceRange(v as [number, number])}
                 />
                 <div className="mt-1 flex justify-between text-xs text-muted-foreground">
-                  <span>${priceRange[0]}</span><span>${priceRange[1]}</span>
+                  <span>${priceRange[0]}</span>
+                  <span>${priceRange[1]}</span>
                 </div>
               </div>
               {hasActiveFilters && (
-                <Button variant="ghost" size="sm" onClick={clearFilters} className="text-xs">Clear all</Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearFilters}
+                  className="text-xs"
+                >
+                  Clear all
+                </Button>
               )}
             </div>
           )}
@@ -261,9 +326,18 @@ export default function Home() {
                 <div className="h-20 w-20 rounded-full bg-secondary flex items-center justify-center mb-4">
                   <Search className="h-8 w-8 text-muted-foreground/50" />
                 </div>
-                <p className="font-display text-lg font-semibold text-foreground">No products found</p>
-                <p className="mt-1 text-sm text-muted-foreground">Try adjusting your filters or search terms.</p>
-                <Button variant="outline" size="sm" className="mt-4 border-primary/30 text-primary" onClick={clearFilters}>
+                <p className="font-display text-lg font-semibold text-foreground">
+                  No products found
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Try adjusting your filters or search terms.
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-4 border-primary/30 text-primary"
+                  onClick={clearFilters}
+                >
                   Clear all filters
                 </Button>
               </div>
@@ -285,17 +359,19 @@ export default function Home() {
                     >
                       Previous
                     </Button>
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                      <Button
-                        key={p}
-                        variant={p === page ? 'default' : 'outline'}
-                        size="sm"
-                        className={p !== page ? 'border-border/50' : ''}
-                        onClick={() => setPage(p)}
-                      >
-                        {p}
-                      </Button>
-                    ))}
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      (p) => (
+                        <Button
+                          key={p}
+                          variant={p === page ? "default" : "outline"}
+                          size="sm"
+                          className={p !== page ? "border-border/50" : ""}
+                          onClick={() => setPage(p)}
+                        >
+                          {p}
+                        </Button>
+                      ),
+                    )}
                     <Button
                       variant="outline"
                       size="sm"

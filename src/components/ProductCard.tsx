@@ -1,11 +1,12 @@
-import { Link } from 'react-router-dom';
-import { Heart, ShoppingCart, Star, Eye } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useCartStore } from '@/stores/useCartStore';
-import { useWishlistStore } from '@/stores/useWishlistStore';
-import { useToast } from '@/hooks/use-toast';
-import type { Product } from '@/services/api';
-import { motion } from 'framer-motion';
+import { Link } from "react-router-dom";
+import { Heart, ShoppingCart, Star, Eye } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useCartStore } from "@/stores/useCartStore";
+import { useWishlistStore } from "@/stores/useWishlistStore";
+import { useToast } from "@/hooks/use-toast";
+import type { Product } from "@/services/api";
+import { motion } from "framer-motion";
+import { getPrimaryImage } from "@/lib/helpers";
 
 interface ProductCardProps {
   product: Product;
@@ -22,7 +23,10 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
     e.preventDefault();
     e.stopPropagation();
     addItem(product);
-    toast({ title: 'Added to cart', description: `${product.name} has been added to your bag.` });
+    toast({
+      title: "Added to cart",
+      description: `${product.name} has been added to your bag.`,
+    });
   };
 
   const handleWishlist = (e: React.MouseEvent) => {
@@ -30,8 +34,8 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
     e.stopPropagation();
     toggleItem(product);
     toast({
-      title: wishlisted ? 'Removed from wishlist' : 'Added to wishlist',
-      description: `${product.name} ${wishlisted ? 'removed from' : 'saved to'} your wishlist.`,
+      title: wishlisted ? "Removed from wishlist" : "Added to wishlist",
+      description: `${product.name} ${wishlisted ? "removed from" : "saved to"} your wishlist.`,
     });
   };
 
@@ -46,7 +50,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           {/* Image */}
           <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
             <img
-              src={product.imageUrl}
+              src={getPrimaryImage(product)}
               alt={product.name}
               className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
               loading="lazy"
@@ -77,16 +81,18 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             >
               <Heart
                 className={`h-4 w-4 transition-colors ${
-                  wishlisted ? 'fill-primary text-primary' : 'text-foreground'
+                  wishlisted ? "fill-primary text-primary" : "text-foreground"
                 }`}
               />
             </button>
             {/* Stock badge */}
-            {product.stock !== undefined && product.stock <= 5 && product.stock > 0 && (
-              <span className="absolute left-3 top-3 rounded-full bg-destructive/90 px-2 py-0.5 text-[10px] font-medium text-destructive-foreground">
-                Only {product.stock} left
-              </span>
-            )}
+            {product.stock !== undefined &&
+              product.stock <= 5 &&
+              product.stock > 0 && (
+                <span className="absolute left-3 top-3 rounded-full bg-destructive/90 px-2 py-0.5 text-[10px] font-medium text-destructive-foreground">
+                  Only {product.stock} left
+                </span>
+              )}
           </div>
 
           {/* Info */}
@@ -101,12 +107,17 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             </h3>
             <div className="mt-2 flex items-center justify-between">
               <span className="font-body text-sm font-semibold text-primary">
-                ${product.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                $
+                {product.price.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                })}
               </span>
               {product.rating && (
                 <div className="flex items-center gap-1">
                   <Star className="h-3 w-3 fill-primary text-primary" />
-                  <span className="text-xs text-muted-foreground">{product.rating}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {product.rating}
+                  </span>
                 </div>
               )}
             </div>
