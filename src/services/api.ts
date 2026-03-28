@@ -35,17 +35,22 @@ export interface ProductImages {
 }
 
 export interface Product {
-  id: string;
+  id: number;
   name: string;
   description?: string;
   price: number;
   discountPrice?: number;
-  sku: string;
-  status: "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK";
-  stockQuantity: number;
-  categoryName: string;
-  categoryId: string;
-  images: ProductImages[];
+  sku?: string;
+  status?: "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK";
+  stockQuantity?: number;
+  categoryName?: string;
+  categoryId: number;
+  category?: Category;
+  images?: ProductImages[];
+  imageUrl?: string;
+  stock?: number;
+  rating?: number;
+  reviewCount?: number;
 }
 
 export interface Review {
